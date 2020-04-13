@@ -22,8 +22,16 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $plan->name }}</h5>
                                 <p class="card-text">Price : {{ number_format($plan->price / 100,2) }}</p>
-                                @if($plan->stripe_plan_id == $currentPlan)
+                                @if($plan->stripe_plan_id == $currentPlan->stripe_plan)
                                     Your current paln.
+                                    @if(!$currentPlan->onGracePeriod())
+                                        <a href="{{ route('cancel') }}" onclick="return comfirm('Are you sure?')"
+                                         class="btn btn-danger">Cancel</a>
+                                    @else
+                                        Your subscription will end on {{ $currentPlan->ends_at->toDateString() }}
+                                        <a href="{{ route('resume') }}" onclick="return comfirm('Are you sure?')"
+                                         class="btn btn-primary">Resume</a>
+                                    @endif
                                 @else
                                 <a href="{{ route('checkout',$plan->id ) }}" class="btn btn-primary">Go To Purchase</a>
                                 @endif

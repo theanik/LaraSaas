@@ -27,6 +27,8 @@ Route::group(['middleware'=>'auth'],function(){
 	Route::get('/home', 'HomeController@index')->name('home');
     Route::namespace('Billing')->group( function(){
         Route::get('/billing','BillingController@index')->name('billing');
+        Route::get('cancel','BillingController@cancel')->name('cancel');
+        Route::get('resume','BillingController@resume')->name('resume');
     });
     Route::namespace('Checkout')->group( function(){
         Route::get('/checkout/{plan_id}','CheckoutController@index')->name('checkout');
