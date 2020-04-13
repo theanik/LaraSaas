@@ -11,6 +11,11 @@ class CheckoutController extends Controller
     {
         $plan = Plan::findOrFail($plan_id);
         $intent = auth()->user()->createSetupIntent();
+        $currentPlan = auth()->user()->subscription('default')->stripe_plan ?? NULL;
+        if(!is_null($currentPlan) && $currentPlan != $plan->stripe_plan_id){
+            auth()->user()->subscription('default')->swap($plan->stripe_plan_id);
+            return redirect()->route('billing');
+        }
         if($plan){
             return view('billing.checkout',compact('plan','intent'));
         }
