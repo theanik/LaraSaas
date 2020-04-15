@@ -40,6 +40,9 @@
                                                 <a href="{{ route('resume') }}" onclick="return comfirm('Are you sure?')"
                                                 class="btn btn-primary">Resume</a>
                                             @endif
+                                        @else 
+                                            <a href="{{ route('checkout',$plan->id ) }}" class="btn btn-primary">Go To Purchase</a>
+
                                         @endif
                                     @else
                                     <a href="{{ route('checkout',$plan->id ) }}" class="btn btn-primary">Go To Purchase</a>

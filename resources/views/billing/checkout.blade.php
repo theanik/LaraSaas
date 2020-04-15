@@ -4,6 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+          <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
+            @csrf
             <div class="card">
                 <div class="card-header">Checkout</div>
 
@@ -11,8 +13,51 @@
                     @if(session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
-                   <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
-                    @csrf
+
+                    <div class="row">
+                      <div class="col-md-4">
+                          Name or Company Name:
+                          <br />
+                          <input type="text" name="company_name" class="form-control" required />
+                      </div>
+                      <div class="col-md-4">
+                          Address line 1:
+                          <br />
+                          <input type="text" name="address_line_1" class="form-control" required />
+                      </div>
+                      <div class="col-md-4">
+                          Address line 2 (optional):
+                          <br />
+                          <input type="text" name="address_line_2" class="form-control" />
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-4">
+                          Country:
+                          <br />
+                          <select name="country_id" class="form-control">
+                              @foreach($countries as $country)
+                                  <option value="{{ $country->id }}">{{ $country->name }}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                      <div class="col-md-4">
+                          City:
+                          <br />
+                          <input type="text" name="city" class="form-control" required />
+                      </div>
+                      <div class="col-md-4">
+                          Postcode:
+                          <br />
+                          <input type="text" name="postcode" class="form-control" />
+                      </div>
+                  </div>
+
+                  <hr />
+
+
+                   
                     <input type="hidden" name="billing_plan_id" value="{{ $plan->id }}">
                     <input type="hidden" name="payment-method" id="payment-method" value="">
 
@@ -24,9 +69,10 @@
                    <button id="card-button" data-secret="{{ $intent->client_secret }}">
                         Pay {{ number_format($plan->price / 100,2) }}
                     </button>
-                   </form>
+                  
                 </div>
             </div>
+          </form>
         </div>
     </div>
 </div>
