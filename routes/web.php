@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,9 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('/checkout/{plan_id}','CheckoutController@index')->name('checkout');
         Route::post('/process','CheckoutController@process')->name('checkout.process');
     });
+
+    Route::resource('payment', 'PaymentMethodController');
+    Route::get('payment.makeDefault/{paymentMethod}','PaymentMethodController@makeDefault')->name('payment.makeDefault');
 
     
 });
