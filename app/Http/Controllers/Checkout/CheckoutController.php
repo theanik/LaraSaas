@@ -6,6 +6,8 @@ use App\Country;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Plan;
+use App\Service\InvoiceService;
+
 class CheckoutController extends Controller
 {
     public function index($plan_id)
@@ -40,6 +42,14 @@ class CheckoutController extends Controller
                 'city' => $request->input('city'),
                 'postcode' => $request->input('postcode'),
             ]);
+            $data = [];
+            $date['name'] = auth()->user()->name;
+            $data['email'] = auth()->user()->email;
+            $data['toatal'] = $plan->price;
+
+            // (new InvoiceService)->getInvoice($data);
+
+
             return redirect()->route('billing')->withMessage('Payment Successfully Done!!!');
         }catch(\Exception $e){
             return redirect()->back()->withError($e->getMessage());
