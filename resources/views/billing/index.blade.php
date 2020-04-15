@@ -8,11 +8,18 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
+                    @if (auth()->user()->trial_ends_at)
+                        <div class="alert alert-info">
+                            your have {{ now()->diffInDays(auth()->user()->trial_ends_at)}} day's trial
+                        </div>
+                    @endif
                     @if(session('message'))
                         <div class="alert alert-info">{{ session('message') }}</div>
                     @endif
                     @if(is_null($currentPlan))
                         You are in free trile
+                    @elseif($currentPlan->trial_ends_at )
+                        your trial ends on {{ $currentPlan->trial_ends_at->toDateString() }} and your card will be charged.
                     @endif
                 <div class="row">
                     
@@ -22,19 +29,22 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $plan->name }}</h5>
                                 <p class="card-text">Price : {{ number_format($plan->price / 100,2) }}</p>
-                                @if($plan->stripe_plan_id == $currentPlan->stripe_plan)
-                                    Your current paln.
-                                    @if(!$currentPlan->onGracePeriod())
-                                        <a href="{{ route('cancel') }}" onclick="return comfirm('Are you sure?')"
-                                         class="btn btn-danger">Cancel</a>
+                                    @if($currentPlan)
+                                        @if($plan->stripe_plan_id == $currentPlan->stripe_plan)
+                                            Your current paln.
+                                            @if(!$currentPlan->onGracePeriod())
+                                                <a href="{{ route('cancel') }}" onclick="return comfirm('Are you sure?')"
+                                                class="btn btn-danger">Cancel</a>
+                                            @else
+                                                Your subscription will end on {{ $currentPlan->ends_at->toDateString() }}
+                                                <a href="{{ route('resume') }}" onclick="return comfirm('Are you sure?')"
+                                                class="btn btn-primary">Resume</a>
+                                            @endif
+                                        @endif
                                     @else
-                                        Your subscription will end on {{ $currentPlan->ends_at->toDateString() }}
-                                        <a href="{{ route('resume') }}" onclick="return comfirm('Are you sure?')"
-                                         class="btn btn-primary">Resume</a>
+                                    <a href="{{ route('checkout',$plan->id ) }}" class="btn btn-primary">Go To Purchase</a>
                                     @endif
-                                @else
-                                <a href="{{ route('checkout',$plan->id ) }}" class="btn btn-primary">Go To Purchase</a>
-                                @endif
+                                    
                             </div>
                         </div>
                     </div>
